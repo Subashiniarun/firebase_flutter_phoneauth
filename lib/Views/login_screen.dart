@@ -26,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   late String verificationId;
   bool showLoading = false;
-  late int _forceResendingToken;
+  // int _forceResendingToken= 0;
 
 
   getMobileFormWidget(context){
@@ -36,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
         TextField(
           controller: _phoneController,
           decoration: InputDecoration(
-            hintText: "phone number"
+              hintText: "phone number"
           ),
         ),
         SizedBox(
@@ -52,23 +52,23 @@ class _LoginScreenState extends State<LoginScreen> {
             });
 
 
-          //forceResendingToken added
+            //forceResendingToken added
 
-            await _auth.verifyPhoneNumber(
-                phoneNumber: _phoneController.text,
-                forceResendingToken: _forceResendingToken,
-                timeout: const Duration(seconds: 120),
-                verificationCompleted:(phoneAuthCredential) async
-                {setState(() {
-                  showLoading = false;
-                });
-                  //signInWithPhoneAuthCredential(phoneAuthCredential);
+            /*await _auth.verifyPhoneNumber(
+              phoneNumber: _phoneController.text,
+              forceResendingToken: _forceResendingToken,
+              timeout: const Duration(seconds:  20),
+              verificationCompleted:(phoneAuthCredential) async
+              {setState(() {
+                showLoading = false;
+              });
+                //signInWithPhoneAuthCredential(phoneAuthCredential);
 
-                },
-                verificationFailed: (verificationFailed) async{
-                  _scaffoldKey.currentState!.showSnackBar(SnackBar(content: Text(verificationFailed.message.toString())));
+              },
+              verificationFailed: (verificationFailed) async{
+                _scaffoldKey.currentState!.showSnackBar(SnackBar(content: Text(verificationFailed.message.toString())));
 
-                },
+              },
               codeSent: (verificationId, [forceResendingToken]) async{
                 setState(() {
                   showLoading = false;
@@ -84,23 +84,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 });
               },
 
-                );
-
+            );
+*/
             //without forceResendingToken
 
-          /*await _auth.verifyPhoneNumber(
-
+            await _auth.verifyPhoneNumber(
               phoneNumber: _phoneController.text,
               verificationCompleted: (phoneAuthCredential) async
               {setState(() {
                   showLoading = false;
                 });
               //signInWithPhoneAuthCredential(phoneAuthCredential);
-
               },
               verificationFailed: (verificationFailed) async{
                 _scaffoldKey.currentState!.showSnackBar(SnackBar(content: Text(verificationFailed.message.toString())));
-
               },
               codeSent: (verificationId, resendingToken) async{
                 setState(() {
@@ -108,14 +105,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   currentState = MobileVerficationState.show_otp_form_state;
                   this.verificationId = verificationId;
                 });
-
               },
               codeAutoRetrievalTimeout:(verificationId) async{
                 setState(() {
                   this.verificationId = verificationId;
                 });
               },
-              timeout: Duration(seconds: 120));*/
+              timeout: Duration(seconds: 30));
           },
 
         ),
@@ -144,15 +140,15 @@ class _LoginScreenState extends State<LoginScreen> {
           MaterialButton(
             color:Colors.amberAccent ,
             onPressed:() async{
-            PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: _otpController.text);
-            signInWithPhoneAuthCredential(phoneAuthCredential);
-          },
+              PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: _otpController.text);
+              signInWithPhoneAuthCredential(phoneAuthCredential);
+            },
             child:Text("Send"),
           ),
           SizedBox(
             height: 20,
           ),
-          MaterialButton(
+          /*MaterialButton(
             color:Colors.amberAccent ,
             onPressed:() async{
               PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: _otpController.text);
@@ -160,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
             },
             child:Text("Resend"),
 
-          ),
+          ),*/
         ],
       ),
     );
@@ -172,11 +168,11 @@ class _LoginScreenState extends State<LoginScreen> {
       key: _scaffoldKey,
       body: Container(
         padding: const EdgeInsets.only(left:25,right: 25,),
-            child: showLoading? Center(child: CircularProgressIndicator(),):currentState== MobileVerficationState.show_mbl_form_state
-                ?getMobileFormWidget(context)
-                :getOtpFormWidget(context),
-        ),
-      );
+        child: showLoading? Center(child: CircularProgressIndicator(),):currentState== MobileVerficationState.show_mbl_form_state
+            ?getMobileFormWidget(context)
+            :getOtpFormWidget(context),
+      ),
+    );
 
   }
 
