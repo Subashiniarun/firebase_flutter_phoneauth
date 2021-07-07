@@ -20,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   MobileVerficationState currentState = MobileVerficationState
       .show_mbl_form_state;
-  final _phoneController = TextEditingController();
+  final phoneController = TextEditingController();
   final _otpController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
             height: 50,
           ),
           TextField(
-            controller: _phoneController,
+            controller: phoneController,
             decoration: InputDecoration(
                 hintText: "phone number"
             ),
@@ -56,6 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
 
           MaterialButton(
+              minWidth: MediaQuery.of(context).size.height / 2,
             color: Colors.amberAccent,
             child: Text("Verify"),
             onPressed: () async {
@@ -65,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 await _auth.verifyPhoneNumber(
                     timeout: Duration(seconds: 15),
-                    phoneNumber: _phoneController.text,
+                    phoneNumber: phoneController.text,
                     verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async {
                       setState(() {
                         showLoading = false;
@@ -165,6 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
           SizedBox(
             height: 20,
           ),
+
           /*MaterialButton(
             color:Colors.amberAccent ,
             onPressed:() async{
@@ -207,7 +209,7 @@ class _LoginScreenState extends State<LoginScreen> {
       });
       if (authCredential.user != null) {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+            context, MaterialPageRoute(builder: (context) => HomeScreen(num: phoneController.text,)));
       }
     } on FirebaseAuthException catch (e) {
       setState(() {

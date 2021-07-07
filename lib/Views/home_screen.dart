@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:phoneauth/Views/login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  String num ="";
+  HomeScreen({Key? key, required this.num}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -19,9 +20,18 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text("Welcome",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-            SizedBox( height: 20,),
+            Spacer(),
+            Text("Welcome",style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, letterSpacing: 5),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text(widget.num,style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, letterSpacing: 5, color:Colors.grey),
+            ),
+            Spacer(),
+
             MaterialButton(
+              minWidth: MediaQuery.of(context).size.height / 2,
 
               color:Colors.amberAccent ,
               onPressed: () async{
