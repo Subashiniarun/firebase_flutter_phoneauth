@@ -11,7 +11,7 @@ class StripeTransactionResponse {
 
 class StripeService {
 
-  static String paymentApiUrl = 'https://api.stripe.com/v1/payment_intents';
+  static var paymentApiUrl = "https://api.stripe.com/v1/payment_intents";
   static String secret = 'sk_test_51JBDcCSGzErhjlIzj3kt1zueuVXozdAJ5XjCrbIttyDvwIOwlz9wn93rx1fHIrqleyv5k7eOGgMZzHwUOCDUNPQ400xmlNlpDC';
   static Map<String, String> headers = {
     'Authorization': 'Bearer ${StripeService.secret}',
@@ -27,41 +27,6 @@ class StripeService {
     );
   }
 
-  /*static Future<StripeTransactionResponse> payViaExistingCard({required String amount, required String currency, required CreditCard card}) async{
-    try {
-      var paymentMethod = await StripePayment.createPaymentMethod(
-          PaymentMethodRequest(card: card)
-      );
-      var paymentIntent = await StripeService.createPaymentIntent(
-          amount,
-          currency
-      );
-      var response = await StripePayment.confirmPaymentIntent(
-          PaymentIntent(
-              clientSecret: paymentIntent!['client_secret'],
-              paymentMethodId: paymentMethod.id
-          )
-      );
-      if (response.status == 'succeeded') {
-        return new StripeTransactionResponse(
-            message: 'Transaction successful',
-            success: true
-        );
-      } else {
-        return new StripeTransactionResponse(
-            message: 'Transaction failed',
-            success: false
-        );
-      }
-    } on PlatformException catch(err) {
-      return StripeService.getPlatformExceptionErrorResult(err);
-    } catch (err) {
-      return new StripeTransactionResponse(
-          message: 'Transaction failed: ${err.toString()}',
-          success: false
-      );
-    }
-  }*/
 
   static Future<StripeTransactionResponse> payWithNewCard({required String amount, required String currency}) async {
     try {
@@ -116,14 +81,20 @@ class StripeService {
       Map<String, dynamic> body = {
         'amount': amount,
         'currency': currency,
-        //'payment_method_types[]': 'card'
+        'payment_method_types[]': 'card',
+        'description' : 'payment completed',
+        'shipping[name]': 'luciana',
+        'shipping[address][city]': 'Los Angeles',
+        'shipping[address][country]': 'United States',
       };
       var response = await http.post(
-          Uri.https("stripe.com", "https://api.stripe.com/v1/payment_intents"),
+
+          Uri.parse( paymentApiUrl ),
           body: body,
           headers: StripeService.headers
       );
-      print("my response : ${response.body.toString()}");
+      print("$headers");
+     print("my response : ${response.body.toString()}");
       return jsonDecode(response.body);
     } catch (err) {
       print('err charging user: ${err.toString()}');

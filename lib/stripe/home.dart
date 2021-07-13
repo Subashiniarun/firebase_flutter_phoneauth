@@ -19,32 +19,27 @@ class HomePageState extends State<HomePage> {
       case 0:
         payViaNewCard(context);
         break;
-      /*case 1:
-        Navigator.pushNamed(context, '/existing-cards');
-        break;*/
+
     }
   }
 
   payViaNewCard(BuildContext context) async {
 
-   /* ProgressDialog dialog = new ProgressDialog(context);
-    dialog.style(
-        message: 'Please wait...'
-    );*/
-    //await dialog.show();
+
+
     var response = await StripeService.payWithNewCard(
         amount: '15000',
         currency: 'USD'
     );
 
-    //await dialog.hide();
     Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text(response.message),
-          duration: new Duration(milliseconds: response.success == true ? 1200 : 3000),
+          duration: new Duration(milliseconds: response.success == true ? 1000 : 3000),
         )
     );
   }
+
 
   @override
   void initState() {
@@ -66,7 +61,7 @@ class HomePageState extends State<HomePage> {
 
             itemBuilder: (context, index){
               icon = Icon(Icons.add_circle, color: theme.primaryColor);
-              text = Text('Pay via new card');
+              text = Text('Pay via card');
               return InkWell(
                 onTap: () {
                   onItemPress(context, index);
@@ -78,8 +73,6 @@ class HomePageState extends State<HomePage> {
               );
             }
         )
-
-
       ),
     );
   }
