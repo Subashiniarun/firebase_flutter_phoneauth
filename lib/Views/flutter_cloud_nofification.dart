@@ -1,10 +1,7 @@
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../service.dart';
-
+import 'package:phoneauth/service.dart';
 
 class CloudNotify extends StatefulWidget {
   CloudNotify({Key? key}) : super(key: key);
@@ -36,8 +33,30 @@ class _CloudNotifyState extends State<CloudNotify> {
         print(message.notification!.title);
         print(message.notification!.body);
       }
-     FlutterLocal.display(message);
+      FlutterLocal.display(message);
     });
+
+    /*FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        showDialog(
+            context: context,
+            builder: (_) {
+              return AlertDialog(
+                title: Text(notification.title.toString()),
+                content: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [Text(notification.body.toString())],
+                  ),
+                ),
+              );
+            });
+      }
+    });
+  }*/
     ///backround
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       final myRoute =message.data["route"];
@@ -64,4 +83,3 @@ class _CloudNotifyState extends State<CloudNotify> {
     );
   }
 }
-

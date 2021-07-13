@@ -27,6 +27,7 @@ class FlutterLocal {
          "FlutterCloudNotification Channel",
          "Thank you selecting the channel",
          color: Colors.green,
+         playSound: true,
          importance: Importance.max,
          priority: Priority.high,
 

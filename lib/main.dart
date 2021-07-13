@@ -1,10 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:phoneauth/service.dart';
+import 'package:phoneauth/stripe/existed_card.dart';
+import 'package:phoneauth/stripe/home.dart';
 import 'Views/flutter_cloud_nofification.dart';
 import 'Views/flutter_local_notification.dart';
 import 'Views/login_screen.dart';
+
+
 
 Future<void> onMesHandler(RemoteMessage message) async{
  print(message.data.toString());
@@ -29,17 +34,23 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+        initialRoute: '/home',
+        routes: {
+          '/home': (context) => HomePage(),
+          //'/existing-cards': (context) => ExistingCardsPage()
+        },
 
-      home: CloudNotify(),//task 9
+
+      /*CloudNotify(),//task 9
       routes: {
         "local":(_) => LocalNotifi(),
-        "login":(_) => LoginScreen(),
-
-      }
-             //LocalNotifi(), //task 8
-            // LoginScreen(), // task 7 (Phone auth)
+        "login":(_) => LoginScreen(),}*/
+      //LocalNotifi(), //task 8
+      // LoginScreen(), // task 7 (Phone auth)
     );
   }
 }
+
+
 
 
