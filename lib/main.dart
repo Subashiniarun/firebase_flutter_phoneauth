@@ -2,12 +2,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:phoneauth/service.dart';
-import 'package:phoneauth/stripe/existed_card.dart';
+import 'package:phoneauth/notifications/service.dart';
 import 'package:phoneauth/stripe/home.dart';
-import 'Views/flutter_cloud_nofification.dart';
-import 'Views/flutter_local_notification.dart';
-import 'Views/login_screen.dart';
+
+import 'notifications/flutter_cloud_nofification.dart';
+import 'notifications/flutter_local_notification.dart';
 
 
 
@@ -34,12 +33,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+
+       // home:StripePayment(),
+
+       //normal stripe
         initialRoute: '/home',
         routes: {
           '/home': (context) => HomePage(),
-          //'/existing-cards': (context) => ExistingCardsPage()
         },
-
 
       /*CloudNotify(),//task 9
       routes: {

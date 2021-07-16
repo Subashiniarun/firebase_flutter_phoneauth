@@ -1,7 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:phoneauth/stripe/services.dart';
-// ignore: import_of_legacy_library_into_null_safe
-//import 'package:progress_dialog/progress_dialog.dart';
+
+
 
 class HomePage extends StatefulWidget {
   HomePage({ Key? key}) : super(key: key);
@@ -11,34 +12,8 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  late Icon icon;
+
   late Text text;
-
-  onItemPress(BuildContext context, int index) async {
-    switch(index) {
-      case 0:
-        payViaNewCard(context);
-        break;
-
-    }
-  }
-
-  payViaNewCard(BuildContext context) async {
-
-
-
-    var response = await StripeService.payWithNewCard(
-        amount: '15000',
-        currency: 'USD'
-    );
-
-    Scaffold.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.message),
-          duration: new Duration(milliseconds: response.success == true ? 1000 : 3000),
-        )
-    );
-  }
 
 
   @override
@@ -49,31 +24,49 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+          backgroundColor: Color.fromRGBO(0, 179, 134, 1.0),
+        title: Text('Stripe payment via card',style: TextStyle(color: Colors.black, fontSize: 20)),
       ),
-      body: Container(
-        padding: EdgeInsets.all(20),
-        child: ListView.builder(
-          itemCount: 1,
+      body: Center(
+        child: Container(
 
-            itemBuilder: (context, index){
-              icon = Icon(Icons.add_circle, color: theme.primaryColor);
-              text = Text('Pay via card');
-              return InkWell(
-                onTap: () {
-                  onItemPress(context, index);
-                },
-                child: ListTile(
-                  title: text,
-                  leading: icon,
-                ),
-              );
-            }
-        )
+              child: ListView.builder(
+                  padding: EdgeInsets.fromLTRB(50, 40, 40, 40),
+                  itemCount: 1,
+                  itemBuilder: (context, index){
+
+                    text = Text(' Pay Rs - 2,000', style: TextStyle(color: Colors.black, fontSize: 18));
+                    return MaterialButton(
+                      color: Color.fromRGBO(0, 179, 134, 1.0),
+                        onPressed:()=>  payViaNewCard(context),//_onCustomAnimationAlertPressed(context),
+                        child: text,
+                    );
+                  }
+              )
+            ),
       ),
+
+
     );
   }
+
+
+  payViaNewCard(BuildContext context) async {
+
+    var response = await StripeService.payWithNewCard(
+        amount: '200000',
+        currency: 'inr'
+    );
+
+    Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text(response.message),
+          duration: new Duration(milliseconds: response.success == true ? 1100 : 3000),
+        )
+    );
+  }
+
 }

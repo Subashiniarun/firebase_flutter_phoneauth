@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:stripe_payment/stripe_payment.dart';
@@ -12,9 +14,11 @@ class StripeTransactionResponse {
 class StripeService {
 
   static var paymentApiUrl = "https://api.stripe.com/v1/payment_intents";
+
   static String secret = 'sk_test_51JBDcCSGzErhjlIzj3kt1zueuVXozdAJ5XjCrbIttyDvwIOwlz9wn93rx1fHIrqleyv5k7eOGgMZzHwUOCDUNPQ400xmlNlpDC';
   static Map<String, String> headers = {
     'Authorization': 'Bearer ${StripeService.secret}',
+    'Accept': 'application/json',
     'Content-Type': 'application/x-www-form-urlencoded'
   };
   static init() {
@@ -27,22 +31,23 @@ class StripeService {
     );
   }
 
-
   static Future<StripeTransactionResponse> payWithNewCard({required String amount, required String currency}) async {
     try {
       var paymentMethod = await StripePayment.paymentRequestWithCardForm(
           CardFormPaymentRequest()
       );
-      var paymentIntent = await StripeService.createPaymentIntent(
-          amount,
-          currency
+
+      ///Adding secure authentication
+      var response =  await StripePayment.authenticatePaymentIntent(clientSecret: StripeService.secret).then((paymentIntent) async{
+
+        var paymentIntent = await StripeService.createPaymentIntent(amount, currency);
+
+        await StripePayment.confirmPaymentIntent(
+            PaymentIntent(clientSecret: paymentIntent!['client_secret'], paymentMethodId: paymentMethod.id));
+        },
       );
-      var response = await StripePayment.confirmPaymentIntent(
-          PaymentIntent(
-              clientSecret: paymentIntent!['client_secret'],
-              paymentMethodId: paymentMethod.id
-          )
-      );
+
+
       if (response.status == 'succeeded') {
         return new StripeTransactionResponse(
             message: 'Transaction successful',
@@ -55,7 +60,7 @@ class StripeService {
         );
       }
     } on PlatformException catch(err) {
-      return StripeService.getPlatformExceptionErrorResult(err);
+      return getPlatformExceptionErrorResult(err);
     } catch (err) {
       return new StripeTransactionResponse(
           message: 'Transaction failed: ${err.toString()}',
@@ -67,7 +72,8 @@ class StripeService {
   static getPlatformExceptionErrorResult(err) {
     String message = 'Something went wrong';
     if (err.code == 'cancelled') {
-      message = 'Transaction cancelled';
+      message = 'Transaction cancelled ';
+      print("Something went wrong $err");
     }
 
     return new StripeTransactionResponse(
@@ -82,18 +88,14 @@ class StripeService {
         'amount': amount,
         'currency': currency,
         'payment_method_types[]': 'card',
-        'description' : 'payment completed',
-        'shipping[name]': 'luciana',
-        'shipping[address][city]': 'Los Angeles',
-        'shipping[address][country]': 'United States',
       };
       var response = await http.post(
 
-          Uri.parse( paymentApiUrl ),
+          Uri.https(  'api.stripe.com' , "/v1/payment_intents" ),
           body: body,
           headers: StripeService.headers
       );
-      print("$headers");
+      print("my : $paymentApiUrl");
      print("my response : ${response.body.toString()}");
       return jsonDecode(response.body);
     } catch (err) {
@@ -101,4 +103,5 @@ class StripeService {
     }
     return null;
   }
+
 }

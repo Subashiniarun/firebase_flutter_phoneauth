@@ -3,7 +3,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:phoneauth/Views/home_screen.dart';
+
+import 'home_screen.dart';
 
 enum MobileVerficationState{
   show_mbl_form_state,

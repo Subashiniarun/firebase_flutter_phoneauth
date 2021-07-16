@@ -1,7 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:phoneauth/service.dart';
+import 'package:phoneauth/notifications/service.dart';
 
 class CloudNotify extends StatefulWidget {
   CloudNotify({Key? key}) : super(key: key);
