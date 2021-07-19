@@ -38,7 +38,8 @@ class StripeService {
       );
 
       ///Adding secure authentication
-      var response =  await StripePayment.authenticatePaymentIntent(clientSecret: StripeService.secret).then((paymentIntent) async{
+      var response =  await StripePayment.authenticatePaymentIntent(clientSecret: StripeService.secret).then((value) async{
+
 
         var paymentIntent = await StripeService.createPaymentIntent(amount, currency);
 
@@ -46,6 +47,8 @@ class StripeService {
             PaymentIntent(clientSecret: paymentIntent!['client_secret'], paymentMethodId: paymentMethod.id));
         },
       );
+      //var paymentIntent =
+      //await StripePayment.authenticatePaymentIntent(clientSecret: StripeService.secret);
 
 
       if (response.status == 'succeeded') {
@@ -81,6 +84,48 @@ class StripeService {
         success: false
     );
   }
+
+
+
+  /*static Future<StripeTransactionResponse> payWithNewCard({required String amount, required String currency}) async {
+    try {
+      var paymentMethod = await StripePayment.paymentRequestWithCardForm(
+          CardFormPaymentRequest()
+      );
+
+
+      var paymentIntent = await StripeService.createPaymentIntent(
+          amount,
+          currency
+      );
+
+      var response = await StripePayment.confirmPaymentIntent(
+          PaymentIntent(
+              clientSecret: paymentIntent!['client_secret'],
+              paymentMethodId: paymentMethod.id
+          )
+      );
+      if (response.status == 'succeeded') {
+        return new StripeTransactionResponse(
+            message: 'Transaction successful',
+            success: true
+        );
+      } else {
+        return new StripeTransactionResponse(
+            message: 'Transaction failed',
+            success: false
+        );
+      }
+    } on PlatformException catch(err) {
+      return getPlatformExceptionErrorResult(err);
+    } catch (err) {
+      return new StripeTransactionResponse(
+          message: 'Transaction failed: ${err.toString()}',
+          success: false
+      );
+    }
+  }*/
+
 
   static Future<Map<String, dynamic>?> createPaymentIntent(String amount, String currency) async {
     try {
